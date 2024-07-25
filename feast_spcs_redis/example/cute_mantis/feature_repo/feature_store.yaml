@@ -1,0 +1,23 @@
+project: cute_mantis
+registry: registry.db
+provider: local
+offline_store:
+    type: snowflake.offline
+    account: AWB48767
+    user: madkins
+    password: 
+    role: MILES
+    warehouse: MILES_WH
+    database: FEAST_SPCS_REDIS
+batch_engine:
+    type: snowflake.engine
+    account: AWB48767
+    user: madkins
+    password: 
+    role: MILES
+    warehouse: MILES_WH
+    database: FEAST_SPCS_REDIS
+online_store:
+    type: redis
+    connection_string: "localhost:6379"
+entity_key_serialization_version: 2

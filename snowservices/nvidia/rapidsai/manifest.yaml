@@ -1,0 +1,10 @@
+spec:
+  container:
+  - name: nvidia-rapidsai
+    image: sfengineering-servicesnow.registry.snowflakecomputing.com/sailpoint/public/louvain/rapidsai:22.12-cuda11.5-runtime-ubuntu20.04-py3.8
+    env:
+      EXTRA_CONDA_PACKAGES: "snowflake-snowpark-python[pandas]"
+  endpoint:
+  - name: nvidia-rapidsai-jupyterlab
+    port: 8888
+    public: true

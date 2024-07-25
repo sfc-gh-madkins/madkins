@@ -1,0 +1,17 @@
+spec:
+  container:
+  - name: nvidia-train
+    image: sfengineering-servicesnow.registry.snowflakecomputing.com/spcs_demo/prod/tm/rapidsai:22.12-cuda11.5-base-ubuntu20.04-py3.8
+    volumeMounts:
+    - name: snowpark-container-demo
+      mountPath: /snowpark-container-demo
+    env:
+      SNOWFLAKE_MOUNTED_STAGE_PATH: /snowpark-container-demo/notebook
+    command:
+    - bash
+    args:
+    - -c
+    - python /snowpark-container-demo/job/rapidsai:22.12-cuda11.5-base-ubuntu20.04-py3.8/train.py
+  volume:
+  - name: snowpark-container-demo
+    source: "@SPCS_DEMO.PROD.SNOWPARK_CONTAINER_DEMO"

@@ -1,0 +1,30 @@
+spec:
+  container:
+  - name: code-interpreter
+    image: sfsenorthamerica-demo412.registry.snowflakecomputing.com/miles/spcs_functions/spcs_functions_image/spcs_code_interpreter:v1
+    command:
+    - uvicorn
+    args:
+    - spcs_code_interpreter:app
+    - --app-dir=/spcs_functions_stage
+    - --host=0.0.0.0
+    - --port=8000
+    - --workers=1
+    volumeMounts:
+    - name: functions-stage
+      mountPath: /spcs_functions_stage
+    resources:
+      requests:
+        nvidia.com/gpu: 1
+      limits:
+        nvidia.com/gpu: 1
+  volume:
+  - name: functions-stage
+    source: "@MILES.SPCS_FUNCTIONS.SPCS_FUNCTIONS_STAGE"
+    uid: 1000
+    gid: 1000
+  endpoint:
+  - name: code-interpreter-http
+    port: 8000
+  networkPolicyConfig:
+    allowInternetEgress: true

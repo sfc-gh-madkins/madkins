@@ -1,0 +1,53 @@
+spec:
+  container:
+  - name: tritonclient
+    image: sfengineering-servicesnow.registry.snowflakecomputing.com/spcs_demo/prod/tm/tritonserver:22.12-py3-sdk
+    volumeMounts:
+    - name: snowpark-container-demo
+      mountPath: /snowpark-container-demo
+    command:
+    - uvicorn
+    args:
+    - triton_client:app
+    - --app-dir=/snowpark-container-demo/triton/tritonserver:22.12-py3-sdk
+    - --host=0.0.0.0
+    - --port=8080
+    - --workers=10
+  - name: tritonserver
+    image: sfengineering-servicesnow.registry.snowflakecomputing.com/spcs_demo/prod/tm/tritonserver:22.12-py3
+    volumeMounts:
+    - name: snowpark-container-demo
+      mountPath: /snowpark-container-demo
+    env:
+      SNOWFLAKE_MOUNTED_STAGE_PATH: /snowpark-container-demo
+    command:
+    - bash
+    args:
+    - -c
+#    - tritonserver --model-repository=/snowpark-container-demo/triton/tritonserver:22.12-py3/model_repository
+    - CUDA_VISIBLE_DEVICES=0,1 tritonserver --model-repository=/snowpark-container-demo/triton/tritonserver:22.12-py3/model_repository --backend-config=python,shm-default-byte-size=15749216  #64mb max shared memory
+  - name: nvidia-notebook
+    image: sfengineering-servicesnow.registry.snowflakecomputing.com/spcs_demo/prod/tm/rapidsai:22.12-cuda11.5-runtime-ubuntu20.04-py3.8
+    volumeMounts:
+    - name: snowpark-container-demo
+      mountPath: /rapids/notebooks/snowpark-container-demo
+    env:
+      SNOWFLAKE_MOUNTED_STAGE_PATH: /rapids/notebooks/snowpark-container-demo
+  volume:
+  - name: snowpark-container-demo
+    source: "@SPCS_DEMO.PROD.SNOWPARK_CONTAINER_DEMO"
+  endpoint:
+  - name: tritonserver-http
+    port: 8000
+    public: true
+  - name: tritonserver-grpc
+    port: 8001
+    public: true
+  - name: tritonserver-prometheus
+    port: 8002
+    public: true
+  - name: tritonclient
+    port: 8080
+  - name: rapidsai-notebook
+    port: 8888
+    public: true

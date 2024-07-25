@@ -1,0 +1,7 @@
+spec:
+  container:
+  - name: nvidia
+    image: temptest-snowflake.registry-dev.snowflakecomputing.com/nvidia/public/nvidia/snownvidia_triton:v5
+  endpoint:
+  - name: e1
+    port: 8000  # http Service

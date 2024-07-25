@@ -1,0 +1,62 @@
+spec:
+  container:
+  - name: feastserver
+    image: sfsenorthamerica-demo412.registry.snowflakecomputing.com/feast_spcs_redis/feature_store/feast_spcs_redis_image/feast:v1
+    resources:
+        requests:
+          memory: 15G
+          cpu: 14
+        limits:
+          memory: 15G
+          cpu: 14
+    volumeMounts:
+    - name: feast-spcs-redis-stage
+      mountPath: /opt/feast-spcs-redis-stage
+    command:
+    - bash
+    args:
+    - -c
+    - "sleep infinity"
+    - "ls opt/feast-spcs-redis-stage/example/cute_mantis/feature_repo"
+  - name: redis
+    image: sfsenorthamerica-demo412.registry.snowflakecomputing.com/feast_spcs_redis/feature_store/feast_spcs_redis_image/redis:v1
+    resources: 
+        requests:
+          memory: 100G
+          cpu: 14
+        limits:
+          memory: 100G
+          cpu: 14
+  - name: vscode
+    image: sfsenorthamerica-demo412.registry.snowflakecomputing.com/feast_spcs_redis/feature_store/feast_spcs_redis_image/codeserver:v1
+    resources:
+        requests:
+          memory: 5G
+          cpu: 2
+        limits:
+          memory: 5G
+          cpu: 2
+    volumeMounts:
+    - name: feast-spcs-redis-stage
+      mountPath: /opt/feast-spcs-redis-stage
+    env:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+      SUDO_PASSWORD: p123!
+      DEFAULT_WORKSPACE: /opt/feast-spcs-redis-stage
+  volume:
+  - name: feast-spcs-redis-stage
+    source: "@FEAST_SPCS_REDIS.FEATURE_STORE.FEAST_SPCS_REDIS_STAGE"
+  endpoint:
+  - name: feast
+    port: 6566
+    public: true
+  - name: redis
+    port: 6379
+    public: true
+  - name: vscode
+    port: 8443
+    public: true
+  networkPolicyConfig:
+    allowInternetEgress: true

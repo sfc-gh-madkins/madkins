@@ -1,0 +1,11 @@
+manifest_version: 1
+
+artifacts:
+  setup_script: snowflake_app_build/setup.sql
+  readme: README.md
+  extension_code: true
+  default_streamlit: code.streamlit_prediction_app
+
+configuration:
+  log_level: debug
+  trace_level: always
